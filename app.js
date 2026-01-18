@@ -72,15 +72,24 @@ function init() {
     renderNav();
     loadView('dashboard');
 
-    // Auth Listeners
-    document.getElementById('loginBtn')?.addEventListener('click', () => {
+    // Auth Listeners - EXPOSED GLOBALLY
+    window.triggerLogin = function () {
+        console.log("Attempting Google Sign-In...");
         signInWithPopup(auth, provider)
-            .catch((error) => alert("Login failed: " + error.message));
-    });
+            .then((result) => {
+                console.log("Sign-in successful", result.user);
+            })
+            .catch((error) => {
+                console.error("Login Error:", error);
+                alert(`Login Failed: ${error.message}\n\nMake sure 'troy6363.github.io' is added to Authorized Domains in Firebase Console.`);
+            });
+    };
 
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
-        if (confirm("Sign out?")) signOut(auth);
-    });
+    window.triggerLogout = function () {
+        if (confirm("Sign out?")) {
+            signOut(auth).then(() => console.log("Signed out"));
+        }
+    };
 
     // App Listeners
     if (dashUploadBtn) {
