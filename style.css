@@ -131,6 +131,20 @@ header {
     align-items: flex-start;
 }
 
+.header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mobile-header-logo {
+    display: none;
+    /* Hidden by default (desktop) */
+    width: 60px;
+    height: auto;
+    border-radius: 8px;
+}
+
 h1 {
     font-size: 1.8rem;
     font-weight: 700;
@@ -497,6 +511,11 @@ tr:hover td {
         gap: 1rem;
         align-items: stretch;
         margin-bottom: 2rem;
+    }
+
+    .mobile-header-logo {
+        display: block;
+        /* Show on mobile */
     }
 
     /* Stack Grids */
