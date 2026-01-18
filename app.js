@@ -343,17 +343,45 @@ function renderMonthDetail(month) {
     tbody.innerHTML = '';
     itemsTbody.innerHTML = '';
 
+    // Delete Invoice Logic
+    window.deleteInvoice = function (month, index) {
+        if (!confirm('Are you sure you want to delete this invoice? This action cannot be undone.')) return;
+
+        const monthData = appData[month];
+        if (!monthData || !monthData.invoices[index]) return;
+
+        // Remove invoice
+        monthData.invoices.splice(index, 1);
+
+        // Recalculate Totals
+        let newDevices = 0;
+        let newPaid = 0;
+        monthData.invoices.forEach(inv => {
+            newDevices += inv.deviceCount;
+            newPaid += inv.totalAmount;
+        });
+        monthData.totalDevices = newDevices;
+        monthData.totalPaid = newPaid;
+
+        saveData();
+    };
+
     if (data.invoices.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">No invoices uploaded yet</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No invoices uploaded yet</td></tr>`;
         itemsTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem;">No items yet</td></tr>`;
     } else {
-        data.invoices.forEach(inv => {
+        data.invoices.forEach((inv, index) => {
             tbody.innerHTML += `
                 <tr>
                     <td>${new Date(inv.uploadDate).toLocaleDateString()}</td>
                     <td>${inv.fileName}</td>
                     <td>${inv.deviceCount}</td>
                     <td>${formatCurrency(inv.totalAmount)}</td>
+                    <td>
+                        <button class="btn btn-danger" style="padding: 0.4rem; font-size: 1rem;" onclick="deleteInvoice('${month}', ${index})">
+                            <i class="ph-bold ph-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             `;
             if (inv.items) {
