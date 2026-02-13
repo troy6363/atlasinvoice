@@ -1,4 +1,5 @@
 // Import Firebase (ES Modules via CDN)
+// Repository: atlasinvoice
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -385,10 +386,12 @@ function renderMonthDetail(month) {
                 </tr>
             `;
             if (inv.items) {
+                const uploadDate = new Date(inv.uploadDate).toLocaleDateString();
                 inv.items.forEach(item => {
                     itemsTbody.innerHTML += `
                         <tr>
                             <td>${item.model}</td>
+                            <td style="color: var(--text-muted); font-size: 0.9rem;">${uploadDate}</td>
                             <td style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted);">${item.imei || '-'}</td>
                             <td>${item.quantity}</td>
                             <td>${formatCurrency(item.price)}</td>
